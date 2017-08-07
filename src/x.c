@@ -15,6 +15,7 @@
 #endif
 
 xcb_window_t ewmh_window;
+extern xcb_window_t desktop_window;
 
 /* Stores the X11 window ID of the currently focused window */
 xcb_window_t focused_id = XCB_NONE;
@@ -404,6 +405,8 @@ void x_draw_decoration(Con *con) {
     /* find out which colors to use */
     if (con->urgent)
         p->color = &config.client.urgent;
+    else if (focused->type==CT_WORKSPACE && desktop_window != XCB_NONE)
+        p->color = &config.client.focused_inactive;
     else if (con == focused || con_inside_focused(con))
         p->color = &config.client.focused;
     else if (con == TAILQ_FIRST(&(parent->focus_head)))
@@ -1095,6 +1098,12 @@ void x_push_changes(Con *con) {
     if (focused->window != NULL)
         to_focus = focused->window->id;
 
+    if(focused->type == CT_WORKSPACE && desktop_window != XCB_NONE) {
+        to_focus = desktop_window;
+        /* assume that the desktop window is mapped */
+        focused->mapped = true;
+    }
+    
     if (focused_id != to_focus) {
         if (!focused->mapped) {
             DLOG("Not updating focus (to %p / %s), focused window is not mapped.\n", focused, focused->name);

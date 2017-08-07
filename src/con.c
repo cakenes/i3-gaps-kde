@@ -13,6 +13,8 @@
 
 #include "yajl_utils.h"
 
+extern xcb_window_t desktop_window;
+
 static void con_on_remove_child(Con *con);
 
 /*
@@ -1199,6 +1201,9 @@ void con_move_to_workspace(Con *con, Con *workspace, bool fix_coordinates, bool 
         DLOG("Not moving, already there\n");
         return;
     }
+
+    if (focused->type == CT_WORKSPACE && desktop_window != XCB_NONE)
+        return;
 
     Con *target = con_descend_focused(workspace);
     _con_move_to_con(con, target, true, fix_coordinates, dont_warp, ignore_focus);
