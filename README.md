@@ -3,19 +3,23 @@
 The most awesome window manager known to mankind. Period.
 Homepage: http://i3wm.org
 
-## Purpose of this repo
+## Purpose of this repo (by sLite, upstream maintainer)
 
-Vanilla i3 doesn't play that well with KDE/Plasma, and i love KDE, that's why i'm maintaining this repo.
+Vanilla i3 doesn't play that well with KDE/Plasma, and I love KDE, that's why I'm maintaining this repo.
 
-Up until now i just added code and haven't modified vanilla i3 code. I will try to stick to this in the future ensuring simple merges.
+Up until now I just added code and haven't modified vanilla i3 code. I will try to stick to this in the future ensuring simple merges.
 
 ### Branches
 
 * **master, next**: those will stay vanilla for easy fast-forward merges of the official i3 repo
 
-* **kde-master**: that's what you want if you want to use i3 with KDE/Plasma
+* **kde-master**: that's what you want if you want to use i3 with KDE/Plasma from https://github.com/sLite/i3 maintained by me (sLite from upstream and PJK136 here)
+
+* **kde-wm-icons-master**: PJK136's personal branch with some extra stuff merged like window-icons patch from https://github.com/mickael9/i3-window-icons or a PKGBUILD for Arch packaging
 
 I won't maintain an up-to-date **next** branch with KDE/Plasma patches included, if you need that, feel free to clone :)
+
+I (PJK136) will sometimes rebase **kde-wm-icons-master** to include lastest commits from different repos
 
 ### Features
 
@@ -33,4 +37,6 @@ You can check https://github.com/sLite/i3-config for an example config and instr
 ### Credits
 
 * Michael Stapelberg for this awesome project, and all the contributors for their work.
-* Marius Muja for his KDE fixes on earlier versions of i3. They were a gamechanger, and without them i probably would have swiched back to KWM and would be unhappy for the rest of my life ;) I owe you some beers! I basically just ported his patches to 4.8 and left out what isn't necessary anymore.
+* Marius Muja for his KDE fixes on earlier versions of i3.
+* sLite for his KDE patches on current versions of i3.
+* Mickaël Thomas for his window icons patch.
