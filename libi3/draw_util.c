@@ -121,7 +121,7 @@ static void draw_util_set_source_color(surface_t *surface, color_t color) {
     cairo_set_source_rgba(surface->cr, color.red, color.green, color.blue, color.alpha);
 }
 
-/**
+/*
  * Draw the given text using libi3.
  * This function also marks the surface dirty which is needed if other means of
  * drawing are used. This will be the case when using XCB to draw text.
@@ -176,7 +176,7 @@ void draw_util_image(unsigned char *src, int src_width, int src_height, surface_
     cairo_restore(surface->cr);
 }
 
-/**
+/*
  * Draws a filled rectangle.
  * This function is a convenience wrapper and takes care of flushing the
  * surface as well as restoring the cairo state.
@@ -203,7 +203,7 @@ void draw_util_rectangle(surface_t *surface, color_t color, double x, double y, 
     cairo_restore(surface->cr);
 }
 
-/**
+/*
  * Clears a surface with the given color.
  *
  */
@@ -227,7 +227,7 @@ void draw_util_clear_surface(surface_t *surface, color_t color) {
     cairo_restore(surface->cr);
 }
 
-/**
+/*
  * Copies a surface onto another surface.
  *
  */
