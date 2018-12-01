@@ -5,7 +5,7 @@
 # This PKGBUILD was prepared for pacman 4.1 by William. Thank you. :-)
 
 pkgname=i3-kde-git
-pkgver=4.13.r210.g4d257828
+pkgver=4.16.r5.g07e5747c
 pkgrel=1
 pkgdesc='An improved dynamic tiling window manager (with KDE patches)'
 arch=('i686' 'x86_64')
@@ -17,7 +17,7 @@ groups=('i3-vcs')
 depends=('xcb-util-keysyms' 'xcb-util-wm' 'libev' 'yajl'
          'startup-notification' 'pango' 'perl' 'xcb-util-cursor'
          'libxkbcommon-x11' 'xcb-util-xrm')
-makedepends=('git' 'asciidoc' 'docbook-xsl' 'pkgconfig' 'xmlto')
+makedepends=('git' 'asciidoc' 'docbook-xsl' 'pkgconfig')
 optdepends=('rxvt-unicode: The terminal emulator used in the default config.'
             'dmenu: As menu.'
             'i3lock: For locking your screen.'
