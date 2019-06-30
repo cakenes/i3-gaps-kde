@@ -580,50 +580,6 @@ void x_draw_decoration(Con *con) {
     int text_offset_y = (con->deco_rect.height - config.font.height) / 2;
     int text_offset_x = 0;
 
-    struct Window *win = con->window;
-    if (win == NULL) {
-        i3String *title;
-        if (con->title_format == NULL) {
-            char *_title;
-            char *tree = con_get_tree_representation(con);
-            sasprintf(&_title, "i3: %s", tree);
-            free(tree);
-
-            title = i3string_from_utf8(_title);
-            FREE(_title);
-        } else {
-            title = con_parse_title_format(con);
-        }
-
-        draw_util_text(title, &(parent->frame_buffer),
-                       p->color->text, p->color->background,
-                       con->deco_rect.x + logical_px(2),
-                       con->deco_rect.y + text_offset_y,
-                       con->deco_rect.width - 2 * logical_px(2));
-        I3STRING_FREE(title);
-
-        goto after_title;
-    }
-
-    /* Draw the icon */
-    if (win->icon) {
-        uint16_t icon_size = con->deco_rect.height - 2 * logical_px(1);
-
-        int icon_offset_y = (con->deco_rect.height - icon_size) / 2;
-
-        text_offset_x += icon_size + logical_px(1);
-
-        draw_util_image(
-                (unsigned char *)win->icon,
-                win->icon_width,
-                win->icon_height,
-                &(parent->frame_buffer),
-                con->deco_rect.x + logical_px(1),
-                con->deco_rect.y + icon_offset_y,
-                icon_size,
-                icon_size);
-    }
-
     const int title_padding = logical_px(2);
     const int deco_width = (int)con->deco_rect.width;
     int mark_width = 0;
@@ -663,7 +619,42 @@ void x_draw_decoration(Con *con) {
         FREE(formatted_mark);
     }
 
-    i3String *title = con->title_format == NULL ? win->name : con_parse_title_format(con);
+    i3String *title = NULL;
+    struct Window *win = con->window;
+    if (win == NULL) {
+        if (con->title_format == NULL) {
+            char *_title;
+            char *tree = con_get_tree_representation(con);
+            sasprintf(&_title, "i3: %s", tree);
+            free(tree);
+
+            title = i3string_from_utf8(_title);
+            FREE(_title);
+        } else {
+            title = con_parse_title_format(con);
+        }
+    } else {
+        title = con->title_format == NULL ? win->name : con_parse_title_format(con);
+
+        /* Draw the icon */
+        if (win->icon) {
+            uint16_t icon_size = con->deco_rect.height - 2 * logical_px(1);
+
+            int icon_offset_y = (con->deco_rect.height - icon_size) / 2;
+
+            text_offset_x += icon_size + logical_px(1);
+
+            draw_util_image(
+                    (unsigned char *)win->icon,
+                    win->icon_width,
+                    win->icon_height,
+                    &(parent->frame_buffer),
+                    con->deco_rect.x + logical_px(1),
+                    con->deco_rect.y + icon_offset_y,
+                    icon_size,
+                    icon_size);
+        }
+    }
     if (title == NULL) {
         goto copy_pixmaps;
     }
@@ -696,11 +687,10 @@ void x_draw_decoration(Con *con) {
                    con->deco_rect.y + text_offset_y,
                    deco_width - mark_width - text_offset_x - 2 * title_padding);
 
-    if (con->title_format != NULL) {
+    if (win == NULL || con->title_format != NULL) {
         I3STRING_FREE(title);
     }
 
-after_title:
     x_draw_decoration_after_title(con, p);
 copy_pixmaps:
     draw_util_copy_surface(&(con->frame_buffer), &(con->frame), 0, 0, 0, 0, con->rect.width, con->rect.height);
