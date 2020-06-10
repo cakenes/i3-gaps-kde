@@ -40,9 +40,7 @@ void scratchpad_move(Con *con) {
 
     /* If the current con is in fullscreen mode, we need to disable that,
      *  as a scratchpad window should never be in fullscreen mode */
-    if (focused && focused->type != CT_WORKSPACE && focused->fullscreen_mode != CF_NONE) {
-        con_toggle_fullscreen(focused, CF_OUTPUT);
-    }
+    con_disable_fullscreen(con);
 
     /* 1: Ensure the window or any parent is floating. From now on, we deal
      * with the CT_FLOATING_CON. We use automatic == false because the user
@@ -140,7 +138,7 @@ bool scratchpad_show(Con *con) {
             floating->scratchpad_state != SCRATCHPAD_NONE) {
             DLOG("Found a visible scratchpad window on another workspace,\n");
             DLOG("moving it to this workspace: con = %p\n", walk_con);
-            con_move_to_workspace(walk_con, focused_ws, true, false, false);
+            con_move_to_workspace(floating, focused_ws, true, false, false);
             con_activate(con_descend_focused(walk_con));
             return true;
         }
@@ -279,7 +277,7 @@ void scratchpad_fix_resolution(void) {
 
     Rect new_rect = __i3_output->rect;
 
-    if (memcmp(&old_rect, &new_rect, sizeof(Rect)) == 0) {
+    if (rect_equals(new_rect, old_rect)) {
         DLOG("Scratchpad size unchanged.\n");
         return;
     }

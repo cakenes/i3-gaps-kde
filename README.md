@@ -11,7 +11,7 @@ For more information about i3, please see [the project's website](https://i3wm.o
 
 For information about contributing to i3, please see [CONTRIBUTING.md](.github/CONTRIBUTING.md).
 
-## Purpose of this repo (by sLite, upstream maintainer)
+## Purpose of this repo
 
 Vanilla i3 doesn't play that well with KDE/Plasma, and I love KDE, that's why I'm maintaining this repo.
 
