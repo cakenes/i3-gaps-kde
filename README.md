@@ -19,9 +19,7 @@ Up until now i just added code and haven't modified vanilla i3 code. I will try 
 
 ### Branches
 
-* **master, next**: those will stay vanilla for easy fast-forward merges of the official i3 repo
-
-* **kde-master**: that's what you want if you want to use i3 with KDE/Plasma
+* **gaps-kde**: that's what you want if you want to use i3-gaps with KDE/Plasma
 
 I won't maintain an up-to-date **next** branch with KDE/Plasma patches included, if you need that, feel free to clone :)
 
@@ -40,5 +38,7 @@ You can check https://github.com/sLite/i3-config for an example config and instr
 
 ### Credits
 
+* Paul Du for active maintenance of i3's fork for kde.
+* sLite for the older versions of i3's fork for kde.
 * Michael Stapelberg for this awesome project, and all the contributors for their work.
 * Marius Muja for his KDE fixes on earlier versions of i3. They were a gamechanger, and without them i probably would have swiched back to KWM and would be unhappy for the rest of my life ;) I owe you some beers! I basically just ported his patches to 4.8 and left out what isn't necessary anymore.
