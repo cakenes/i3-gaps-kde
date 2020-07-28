@@ -412,7 +412,7 @@ void floating_enable(Con *con, bool automatic) {
     DLOG("Corrected y = %d (deco_height = %d)\n", nc->rect.y, deco_height);
 
     /* render the cons to get initial window_rect correct */
-    render_con(nc);
+    render_con(nc, true);
 
     if (set_focus)
         con_activate(con);
@@ -514,9 +514,15 @@ bool floating_maybe_reassign_ws(Con *con) {
     Con *content = output_get_content(output->con);
     Con *ws = TAILQ_FIRST(&(content->focus_head));
     DLOG("Moving con %p / %s to workspace %p / %s\n", con, con->name, ws, ws->name);
+    Con *needs_focus = con_descend_focused(con);
+    if (!con_inside_focused(needs_focus)) {
+        needs_focus = NULL;
+    }
     con_move_to_workspace(con, ws, false, true, false);
-    workspace_show(ws);
-    con_activate(con_descend_focused(con));
+    if (needs_focus) {
+        workspace_show(ws);
+        con_activate(needs_focus);
+    }
     return true;
 }
 
@@ -570,7 +576,7 @@ DRAGGING_CB(drag_window_callback) {
     con->rect.x = old_rect->x + (new_x - event->root_x);
     con->rect.y = old_rect->y + (new_y - event->root_y);
 
-    render_con(con);
+    render_con(con, true);
     x_push_node(con);
     xcb_flush(conn);
 
@@ -675,7 +681,7 @@ DRAGGING_CB(resize_window_callback) {
     con->rect.x = dest_x;
     con->rect.y = dest_y;
 
-    render_con(con);
+    render_con(con, true);
     x_push_changes(croot);
 }
 

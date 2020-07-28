@@ -24,6 +24,9 @@ state INITIAL:
   'bar'                                    -> BARBRACE
   'font'                                   -> FONT
   'mode'                                   -> MODENAME
+  'gaps'                                   -> GAPS
+  'smart_borders'                          -> SMART_BORDERS
+  'smart_gaps'                             -> SMART_GAPS
   'floating_minimum_size'                  -> FLOATING_MINIMUM_SIZE_WIDTH
   'floating_maximum_size'                  -> FLOATING_MAXIMUM_SIZE_WIDTH
   'floating_modifier'                      -> FLOATING_MODIFIER
@@ -62,6 +65,30 @@ state INITIAL:
 state IGNORE_LINE:
   line
       -> INITIAL
+
+# gaps inner|outer|horizontal|vertical|top|right|bottom|left <px>
+state GAPS:
+  scope = 'inner', 'outer', 'horizontal', 'vertical', 'top', 'right', 'bottom', 'left'
+      -> GAPS_WITH_SCOPE
+
+state GAPS_WITH_SCOPE:
+  value = number
+      -> call cfg_gaps($workspace, $scope, &value)
+
+# smart_borders true|false
+# smart_borders no_gaps
+state SMART_BORDERS:
+  enabled = '1', 'yes', 'true', 'on', 'enable', 'active'
+      -> call cfg_smart_borders($enabled)
+  enabled = 'no_gaps'
+      -> call cfg_smart_borders($enabled)
+
+# smart_gaps on|off
+state SMART_GAPS:
+  enabled = '1', 'yes', 'true', 'on', 'enable', 'active'
+      -> call cfg_smart_gaps($enabled)
+  enabled = 'inverse_outer'
+      -> call cfg_smart_gaps($enabled)
 
 # floating_minimum_size <width> x <height>
 state FLOATING_MINIMUM_SIZE_WIDTH:
@@ -128,10 +155,10 @@ state DEFAULT_BORDER_PIXELS_PX:
   end
       -> call cfg_default_border($windowtype, $border, &width)
 
-# hide_edge_borders <none|vertical|horizontal|both|smart>
+# hide_edge_borders <none|vertical|horizontal|both|smart|no_gaps>
 # also hide_edge_borders <bool> for compatibility
 state HIDE_EDGE_BORDERS:
-  hide_borders = 'none', 'vertical', 'horizontal', 'both', 'smart'
+  hide_borders = 'none', 'vertical', 'horizontal', 'both', 'smart_no_gaps', 'smart'
       -> call cfg_hide_edge_borders($hide_borders)
   hide_borders = '1', 'yes', 'true', 'on', 'enable', 'active'
       -> call cfg_hide_edge_borders($hide_borders)
@@ -271,13 +298,16 @@ state FOCUS_ON_WINDOW_ACTIVATION:
       -> call cfg_focus_on_window_activation($mode)
 
 # workspace <workspace> output <output>
+# workspace <workspace> gaps inner|outer <px>
 state WORKSPACE:
   workspace = word
-    -> WORKSPACE_OUTPUT
+    -> WORKSPACE_COMMAND
 
-state WORKSPACE_OUTPUT:
+state WORKSPACE_COMMAND:
   'output'
       -> WORKSPACE_OUTPUT_WORD
+  'gaps'
+      -> GAPS
 
 state WORKSPACE_OUTPUT_WORD:
   output = word
@@ -472,6 +502,7 @@ state BAR:
   'strip_workspace_numbers' -> BAR_STRIP_WORKSPACE_NUMBERS
   'strip_workspace_name' -> BAR_STRIP_WORKSPACE_NAME
   'verbose'                -> BAR_VERBOSE
+  'height'                 -> BAR_HEIGHT
   'colors'                 -> BAR_COLORS_BRACE
   '}'
       -> call cfg_bar_finish(); INITIAL
@@ -594,6 +625,10 @@ state BAR_STRIP_WORKSPACE_NAME:
 state BAR_VERBOSE:
   value = word
       -> call cfg_bar_verbose($value); BAR
+
+state BAR_HEIGHT:
+  value = number
+      -> call cfg_bar_height(&value); BAR
 
 state BAR_COLORS_BRACE:
   end
